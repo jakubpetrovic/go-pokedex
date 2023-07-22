@@ -20,17 +20,31 @@ func commandHelp(commandMap map[string]cliCommands) {
 	fmt.Printf("\n")
 }
 
+func commandExit() {
+	fmt.Println("See you next time!")
+}
+
 func main() {
 	m := map[string]cliCommands{
 		"help": {
 			name:        "help",
 			description: "Display a help message",
-			//callback:    commandHelp(),
+			//callback:   	commandHelp,
 		},
 		"exit": {
 			name:        "exit",
 			description: "Exits the Pokedex",
-			//callback:    commandExit(),
+			//callback:    	commandExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Displays next 20 aread in the pokemon World",
+			//callback:		commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays previous 20 areas in the pokemon World",
+			//callback:		commandMapb
 		},
 	}
 
@@ -42,13 +56,13 @@ func main() {
 		input := scanner.Text()
 
 		switch input {
-		case "exit":
-			fmt.Println("see you next time")
+		case m["exit"].name:
+			commandExit()
 			return
-		case "help":
+		case m["help"].name:
 			commandHelp(m)
 		default:
-			fmt.Println("incorrect output")
+			fmt.Println("incorrect input")
 		}
 
 	}
