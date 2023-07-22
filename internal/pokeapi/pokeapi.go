@@ -1,4 +1,4 @@
-package pockeapi
+package pokeapi
 
 import "fmt"
 
