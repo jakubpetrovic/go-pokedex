@@ -15,11 +15,11 @@ type cliCommands struct {
 }
 
 func commandHelp(commandMap map[string]cliCommands) {
-	fmt.Printf("\n\nWelcome to Pokedex!\n\n")
+	fmt.Println()
 	for _, n := range commandMap {
 		fmt.Printf("%s: %s\n", n.name, n.description)
 	}
-	fmt.Printf("\n")
+	fmt.Println()
 }
 
 func commandExit() {
@@ -31,7 +31,7 @@ func main() {
 		"help": {
 			name:        "help",
 			description: "Display a help message",
-			//callback:   	commandHelp,
+			//callback:    commandHelp(m),
 		},
 		"exit": {
 			name:        "exit",
