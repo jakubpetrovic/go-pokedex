@@ -50,7 +50,7 @@ func main() {
 		},
 	}
 
-	conf := pokeapi.GetInitLocations()
+	conf := pokeapi.NewLocationConfig()
 
 	for {
 

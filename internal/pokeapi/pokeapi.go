@@ -18,7 +18,11 @@ type locationConfig struct {
 	} `json:"results"`
 }
 
-var conf locationConfig
+func NewLocationConfig() *locationConfig {
+	conf := locationConfig{}
+	fmt.Println(conf)
+	return &conf
+}
 
 func FetchLocations(url string) []byte {
 
@@ -38,25 +42,14 @@ func FetchLocations(url string) []byte {
 	return body
 }
 
-func GetInitLocations() *locationConfig {
-
-	body := FetchLocations("https://pokeapi.co/api/v2/location/")
-	err := json.Unmarshal(body, &conf)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return (&conf)
-}
-
 func GetNextLocations(conf *locationConfig) {
 
-	if conf == nil {
-		fmt.Printf("!!!! CONF IS NIL !!!!")
+	var body []byte
+	if conf.Next == "" {
+		body = FetchLocations("https://pokeapi.co/api/v2/location/")
+	} else {
+		body = FetchLocations(conf.Next)
 	}
-
-	body := FetchLocations(conf.Next)
 
 	err := json.Unmarshal(body, &conf)
 
@@ -73,11 +66,12 @@ func GetNextLocations(conf *locationConfig) {
 
 func GetPrevLocations(conf *locationConfig) {
 
-	if conf == nil {
-		fmt.Printf("!!!! CONF IS NIL !!!!")
+	var body []byte
+	if conf.Previous == "" {
+		body = FetchLocations("https://pokeapi.co/api/v2/location/")
+	} else {
+		body = FetchLocations(conf.Previous)
 	}
-
-	body := FetchLocations(conf.Previous)
 
 	err := json.Unmarshal(body, &conf)
 
