@@ -50,14 +50,14 @@ func main() {
 		},
 	}
 
+	conf := pokeapi.GetInitLocations()
+
 	for {
 
 		fmt.Printf("pokedex > ")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		input := scanner.Text()
-
-		pokeapi.GetInitLocations()
 
 		switch input {
 		case m["exit"].name:
@@ -66,9 +66,9 @@ func main() {
 		case m["help"].name:
 			commandHelp(m)
 		case m["map"].name:
-			pokeapi.GetNextLocations()
+			pokeapi.GetNextLocations(conf)
 		case m["mapb"].name:
-			pokeapi.GetPrevLocations()
+			pokeapi.GetPrevLocations(conf)
 		default:
 			fmt.Println("incorrect input")
 		}

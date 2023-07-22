@@ -20,9 +20,9 @@ type locationConfig struct {
 
 var conf locationConfig
 
-func FetchLocations(url *string) []byte {
+func FetchLocations(url string) []byte {
 
-	res, err := http.Get(*url)
+	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,20 +38,25 @@ func FetchLocations(url *string) []byte {
 	return body
 }
 
-func GetInitLocations() {
-	var initUrl string = "https://pokeapi.co/api/v2/location/"
-	body := FetchLocations(&initUrl)
+func GetInitLocations() *locationConfig {
 
+	body := FetchLocations("https://pokeapi.co/api/v2/location/")
 	err := json.Unmarshal(body, &conf)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	return (&conf)
 }
 
-func GetNextLocations() {
+func GetNextLocations(conf *locationConfig) {
 
-	body := FetchLocations(&conf.Next)
+	if conf == nil {
+		fmt.Printf("!!!! CONF IS NIL !!!!")
+	}
+
+	body := FetchLocations(conf.Next)
 
 	err := json.Unmarshal(body, &conf)
 
@@ -64,15 +69,15 @@ func GetNextLocations() {
 	}
 	fmt.Printf("\n")
 
-	fmt.Println(conf.Next)
-	fmt.Println(conf.Previous)
-	fmt.Println(conf)
-
 }
 
-func GetPrevLocations() {
+func GetPrevLocations(conf *locationConfig) {
 
-	body := FetchLocations(&conf.Previous)
+	if conf == nil {
+		fmt.Printf("!!!! CONF IS NIL !!!!")
+	}
+
+	body := FetchLocations(conf.Previous)
 
 	err := json.Unmarshal(body, &conf)
 
@@ -84,9 +89,5 @@ func GetPrevLocations() {
 		fmt.Printf("\n" + conf.Results[i].Name)
 	}
 	fmt.Printf("\n")
-
-	fmt.Println(conf.Next)
-	fmt.Println(conf.Previous)
-	fmt.Println(conf)
 
 }
