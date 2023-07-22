@@ -50,7 +50,7 @@ func main() {
 		},
 	}
 
-	pokeapi.GetNextMap()
+	locationIndex := 0
 
 	for {
 
@@ -65,6 +65,8 @@ func main() {
 			return
 		case m["help"].name:
 			commandHelp(m)
+		case m["map"].name:
+			fmt.Println(pokeapi.GetNextMap(locationIndex))
 		default:
 			fmt.Println("incorrect input")
 		}
