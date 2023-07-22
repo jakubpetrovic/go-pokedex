@@ -1,42 +1,92 @@
 package pokeapi
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 )
 
-type locationSlice struct {
+type locationConfig struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
-	Previous any    `json:"previous"`
+	Previous string `json:"previous"`
 	Results  []struct {
 		Name string `json:"name"`
 		URL  string `json:"url"`
 	} `json:"results"`
 }
 
-func GetNextMap(locationIndex int) []string {
+var conf locationConfig
 
-	// res, err := http.Get("https://pokeapi.co/api/v2/location")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// body, err := io.ReadAll(res.Body)
-	// res.Body.Close()
-	// if res.StatusCode > 299 {
-	// 	log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-	// }
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Printf("%s", body)
+func FetchLocations(url *string) []byte {
 
-	fmt.Print(locationIndex)
-	locationsSlice := []string{"location1", "location2"}
+	res, err := http.Get(*url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	body, err := io.ReadAll(res.Body)
+	res.Body.Close()
+	if res.StatusCode > 299 {
+		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	return locationsSlice
+	return body
 }
 
-func GetPrevMap() {
-	fmt.Println("Getting previous maps")
-	// if not prev, print error
+func GetInitLocations() {
+	var initUrl string = "https://pokeapi.co/api/v2/location/"
+	body := FetchLocations(&initUrl)
+
+	err := json.Unmarshal(body, &conf)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func GetNextLocations() {
+
+	body := FetchLocations(&conf.Next)
+
+	err := json.Unmarshal(body, &conf)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < len(conf.Results); i++ {
+		fmt.Printf("\n" + conf.Results[i].Name)
+	}
+	fmt.Printf("\n")
+
+	fmt.Println(conf.Next)
+	fmt.Println(conf.Previous)
+	fmt.Println(conf)
+
+}
+
+func GetPrevLocations() {
+
+	body := FetchLocations(&conf.Previous)
+
+	err := json.Unmarshal(body, &conf)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < len(conf.Results); i++ {
+		fmt.Printf("\n" + conf.Results[i].Name)
+	}
+	fmt.Printf("\n")
+
+	fmt.Println(conf.Next)
+	fmt.Println(conf.Previous)
+	fmt.Println(conf)
+
 }
