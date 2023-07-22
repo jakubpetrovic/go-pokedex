@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 type cliCommands struct {
 	name        string
@@ -31,9 +35,11 @@ func main() {
 	}
 
 	for {
-		var input string = ""
+
 		fmt.Printf("pokedex > ")
-		fmt.Scanln(&input)
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		input := scanner.Text()
 
 		switch input {
 		case "exit":
