@@ -20,18 +20,20 @@ type locationConfig struct {
 
 func NewLocationConfig() *locationConfig {
 	conf := locationConfig{}
-	fmt.Println(conf)
 	return &conf
 }
 
 func FetchLocations(url string) []byte {
 
 	res, err := http.Get(url)
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	body, err := io.ReadAll(res.Body)
 	res.Body.Close()
+
 	if res.StatusCode > 299 {
 		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
 	}
@@ -45,6 +47,7 @@ func FetchLocations(url string) []byte {
 func GetNextLocations(conf *locationConfig) {
 
 	var body []byte
+
 	if conf.Next == nil {
 		body = FetchLocations("https://pokeapi.co/api/v2/location/")
 	} else {
@@ -58,15 +61,15 @@ func GetNextLocations(conf *locationConfig) {
 	}
 
 	for i := 0; i < len(conf.Results); i++ {
-		fmt.Printf("\n" + conf.Results[i].Name)
+		fmt.Printf(conf.Results[i].Name + "\n")
 	}
-	fmt.Printf("\n")
 
 }
 
 func GetPrevLocations(conf *locationConfig) {
 
 	var body []byte
+
 	if conf.Previous == nil {
 		body = FetchLocations("https://pokeapi.co/api/v2/location/")
 	} else {
@@ -80,8 +83,6 @@ func GetPrevLocations(conf *locationConfig) {
 	}
 
 	for i := 0; i < len(conf.Results); i++ {
-		fmt.Printf("\n" + conf.Results[i].Name)
+		fmt.Printf(conf.Results[i].Name + "\n")
 	}
-	fmt.Printf("\n")
-
 }
