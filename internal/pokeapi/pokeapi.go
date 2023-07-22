@@ -2,6 +2,10 @@ package pokeapi
 
 import "fmt"
 
-func GetMapNext() {
-	fmt.Println("PACKAGE TEST")
+func GetNextMap() {
+	fmt.Println("Getting next map")
+}
+
+func GetPrevMap() {
+	fmt.Println("Getting previous map")
 }

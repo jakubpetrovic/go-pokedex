@@ -50,7 +50,7 @@ func main() {
 		},
 	}
 
-	pokeapi.GetMapNext()
+	pokeapi.GetNextMap()
 
 	for {
 
