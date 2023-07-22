@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/jpetrovic/go-pokedex/internal/pokeapi"
 )
 
 type cliCommands struct {
@@ -47,6 +49,8 @@ func main() {
 			//callback:		commandMapb
 		},
 	}
+
+	pokeapi.GetMapNext()
 
 	for {
 
