@@ -9,9 +9,9 @@ import (
 )
 
 type locationConfig struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
+	Count    int     `json:"count"`
+	Next     *string `json:"next"`
+	Previous *string `json:"previous"`
 	Results  []struct {
 		Name string `json:"name"`
 		URL  string `json:"url"`
@@ -45,10 +45,10 @@ func FetchLocations(url string) []byte {
 func GetNextLocations(conf *locationConfig) {
 
 	var body []byte
-	if conf.Next == "" {
+	if conf.Next == nil {
 		body = FetchLocations("https://pokeapi.co/api/v2/location/")
 	} else {
-		body = FetchLocations(conf.Next)
+		body = FetchLocations(*conf.Next)
 	}
 
 	err := json.Unmarshal(body, &conf)
@@ -67,10 +67,10 @@ func GetNextLocations(conf *locationConfig) {
 func GetPrevLocations(conf *locationConfig) {
 
 	var body []byte
-	if conf.Previous == "" {
+	if conf.Previous == nil {
 		body = FetchLocations("https://pokeapi.co/api/v2/location/")
 	} else {
-		body = FetchLocations(conf.Previous)
+		body = FetchLocations(*conf.Previous)
 	}
 
 	err := json.Unmarshal(body, &conf)
