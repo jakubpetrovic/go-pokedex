@@ -6,8 +6,8 @@ import (
 )
 
 type cacheEntry struct {
-	Data      string
-	Timestamp time.Time
+	val       []byte
+	createdAt time.Time
 }
 
 type Cache struct {
@@ -15,19 +15,20 @@ type Cache struct {
 	mutex   sync.Mutex
 }
 
-func NewCache(t time.Duration) {
-
+func NewCache(t time.Duration) *Cache {
+	c := Cache{}
+	return &c
 }
 
-func Add(key string, value []byte) {
-
+func Add(key string, value []byte, c *Cache) {
+	c.dataMap[key].val = value
+	c.dataMap[createdAt] = time.Time
 }
 
-func Get(key string) ([]byte, bool) {
-
-	return []byte, false
+func Get(key string, c *Cache) ([]byte, bool) {
+	res := c.dataMap[key].val
+	return res, false
 }
 
 func reapLoop() {
-
 }
