@@ -17,6 +17,7 @@ type Cache struct {
 
 func NewCache(t time.Duration) *Cache {
 	c := Cache{}
+	reapLoop()
 	return &c
 }
 
@@ -31,4 +32,6 @@ func Get(key string, c *Cache) ([]byte, bool) {
 }
 
 func reapLoop() {
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
 }
