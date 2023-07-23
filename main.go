@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/jpetrovic/go-pokedex/internal/pokeapi"
+	"github.com/jpetrovic/go-pokedex/internal/pokecache"
 )
 
 type cliCommands struct {
@@ -26,7 +28,7 @@ func commandExit() {
 	fmt.Println("See you next time!")
 }
 
-func main() {
+func commandLibrary() map[string]cliCommands {
 	m := map[string]cliCommands{
 		"help": {
 			name:        "help",
@@ -49,8 +51,18 @@ func main() {
 			//callback:		commandMapb
 		},
 	}
+	return m
+}
 
-	conf := pokeapi.NewLocationConfig()
+func main() {
+
+	cmdMap := commandLibrary()
+	locationConf := pokeapi.NewLocationConfig()
+	cache := pokecache.NewCache(time.Duration(1000000000))
+
+	if cache == nil {
+		fmt.Println("No Cache was create")
+	}
 
 	for {
 
@@ -60,15 +72,15 @@ func main() {
 		input := scanner.Text()
 
 		switch input {
-		case m["exit"].name:
+		case cmdMap["exit"].name:
 			commandExit()
 			return
-		case m["help"].name:
-			commandHelp(m)
-		case m["map"].name:
-			pokeapi.GetNextLocations(conf)
-		case m["mapb"].name:
-			pokeapi.GetPrevLocations(conf)
+		case cmdMap["help"].name:
+			commandHelp(cmdMap)
+		case cmdMap["map"].name:
+			pokeapi.GetNextLocations(locationConf)
+		case cmdMap["mapb"].name:
+			pokeapi.GetPrevLocations(locationConf)
 		default:
 			fmt.Println("incorrect input")
 		}
