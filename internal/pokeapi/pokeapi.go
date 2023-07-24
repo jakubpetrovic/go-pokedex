@@ -6,6 +6,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/jpetrovic/go-pokedex/internal/pokecache"
 )
 
 type locationConfig struct {
@@ -16,6 +19,21 @@ type locationConfig struct {
 		Name string `json:"name"`
 		URL  string `json:"url"`
 	} `json:"results"`
+}
+
+// POKEAPI CLIENT
+type Client struct {
+	cache      pokecache.Cache
+	httpClient http.Client
+}
+
+func NewClient(timeout, cacheInterval time.Duration) Client {
+	return Client{
+		cache: pokecache.NewCache(cacheInterval),
+		httpClient: http.Client{
+			Timeout: timeout,
+		},
+	}
 }
 
 func NewLocationConfig() *locationConfig {
