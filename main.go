@@ -54,16 +54,14 @@ func commandLibrary() map[string]cliCommands {
 	return m
 }
 
-func main() {
-
-	cmdMap := commandLibrary()
-	locationConf := pokeapi.NewLocationConfig()
+func startRepl() {
 	cache := pokecache.NewCache(time.Duration(1000000000))
 
 	if &cache == nil {
 		fmt.Println("No Cache was created")
 	}
-
+	cmdMap := commandLibrary()
+	locationConf := pokeapi.NewLocationConfig()
 	for {
 
 		fmt.Printf("pokedex > ")
@@ -84,6 +82,9 @@ func main() {
 		default:
 			fmt.Println("incorrect input")
 		}
-
 	}
+}
+
+func main() {
+	startRepl()
 }
