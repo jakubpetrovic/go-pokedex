@@ -60,8 +60,8 @@ func main() {
 	locationConf := pokeapi.NewLocationConfig()
 	cache := pokecache.NewCache(time.Duration(1000000000))
 
-	if cache == nil {
-		fmt.Println("No Cache was create")
+	if &cache == nil {
+		fmt.Println("No Cache was created")
 	}
 
 	for {
