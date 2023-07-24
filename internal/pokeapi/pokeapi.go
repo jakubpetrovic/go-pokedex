@@ -11,6 +11,10 @@ import (
 	"github.com/jpetrovic/go-pokedex/internal/pokecache"
 )
 
+const (
+	baseURL = "https://pokeapi.co/api/v2"
+)
+
 type locationConfig struct {
 	Count    int     `json:"count"`
 	Next     *string `json:"next"`
@@ -43,7 +47,7 @@ func NewLocationConfig() *locationConfig {
 
 func FetchLocations(url string) []byte {
 
-	res, err := http.Get(url)
+	res, err := http.Get(baseURL)
 
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +71,7 @@ func GetNextLocations(conf *locationConfig) {
 	var body []byte
 
 	if conf.Next == nil {
-		body = FetchLocations("https://pokeapi.co/api/v2/location/")
+		body = FetchLocations(baseURL)
 	} else {
 		body = FetchLocations(*conf.Next)
 	}
@@ -89,7 +93,7 @@ func GetPrevLocations(conf *locationConfig) {
 	var body []byte
 
 	if conf.Previous == nil {
-		body = FetchLocations("https://pokeapi.co/api/v2/location/")
+		body = FetchLocations(baseURL)
 	} else {
 		body = FetchLocations(*conf.Previous)
 	}
