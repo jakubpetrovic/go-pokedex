@@ -11,24 +11,48 @@ type cacheEntry struct {
 }
 
 type Cache struct {
-	dataMap map[string]cacheEntry
-	mutex   sync.Mutex
+	dataMap   map[string]cacheEntry
+	cacheLive time.Duration
+	mutex     *sync.Mutex
 }
 
-func NewCache(t time.Duration) *Cache {
-	c := Cache{}
-	return &c
+func NewCache(interval time.Duration) Cache {
+	c := Cache{
+		dataMap: make(map[string]cacheEntry),
+		mutex:   &sync.Mutex{},
+	}
+	return c
 }
 
-func Add(key string, value []byte, c *Cache) {
-	c.dataMap[key].val = value
-	c.dataMap[createdAt] = time.Time
+func (c *Cache) Add(key string, value []byte) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	c.dataMap[key] = cacheEntry{
+		createdAt: time.Now(),
+		val:       value,
+	}
 }
 
-func Get(key string, c *Cache) ([]byte, bool) {
-	res := c.dataMap[key].val
-	return res, false
+func (c *Cache) Get(key string) ([]byte, bool) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	val, ok := c.dataMap[key]
+	return val.val, ok
 }
 
-func reapLoop() {
+func (c *Cache) reapLoop(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	for range ticker.C {
+		c.reap(time.Now().UTC(), interval)
+	}
+}
+
+func (c *Cache) reap(now time.Time, last time.Duration) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	for k, v := range c.dataMap {
+		if v.createdAt.Before(now.Add(-last)) {
+			delete(c.dataMap, k)
+		}
+	}
 }
