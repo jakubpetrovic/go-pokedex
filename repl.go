@@ -28,34 +28,30 @@ func cleanInput(text string) []string {
 }
 
 func startRepl(config *config) {
-
-	// cache := pokecache.NewCache(time.Duration(1000000000))
-
-	// if &cache == nil {
-	// 	fmt.Println("No Cache was created")
-	// }
-	// cmdMap := commandLibrary()
-	// locationConf := pokeapi.NewLocationConfig()
+	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-
 		fmt.Printf("pokedex > ")
-		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
-		input := scanner.Text()
+		words := cleanInput(scanner.Text())
 
-		switch input {
-		case cmdMap["exit"].name:
-			commandExit()
-			return
-		case cmdMap["help"].name:
-			commandHelp(cmdMap)
-		case cmdMap["map"].name:
-			pokeapi.GetNextLocations(locationConf)
-		case cmdMap["mapb"].name:
-			pokeapi.GetPrevLocations(locationConf)
-		default:
-			fmt.Println("incorrect input")
+		if len(words) == 0 {
+			continue
+		}
+
+		commandName := words[0]
+
+		command, exists := commandLibrary()[commandName]
+
+		if exists {
+			err := command.callback(config)
+			if err != nil {
+				fmt.Println(err)
+			}
+			continue
+		} else {
+			fmt.Println("Unknown command")
+			continue
 		}
 	}
 }

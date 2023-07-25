@@ -2,20 +2,15 @@ package pokeapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
-	"log"
 	"net/http"
-	"time"
-
-	"github.com/jpetrovic/go-pokedex/internal/pokecache"
 )
 
 const (
 	baseURL = "https://pokeapi.co/api/v2"
 )
 
-type locationConfig struct {
+type ResponseLocations struct {
 	Count    int     `json:"count"`
 	Next     *string `json:"next"`
 	Previous *string `json:"previous"`
@@ -25,86 +20,44 @@ type locationConfig struct {
 	} `json:"results"`
 }
 
-// POKEAPI CLIENT
-type Client struct {
-	cache      pokecache.Cache
-	httpClient http.Client
-}
-
-func NewClient(timeout, cacheInterval time.Duration) Client {
-	return Client{
-		cache: pokecache.NewCache(cacheInterval),
-		httpClient: http.Client{
-			Timeout: timeout,
-		},
+func (c *Client) ListLocations(pageURL *string) (ResponseLocations, error) {
+	url := baseURL + "/location-area"
+	if pageURL != nil {
+		url = *pageURL
 	}
-}
 
-func NewLocationConfig() *locationConfig {
-	conf := locationConfig{}
-	return &conf
-}
+	if val, ok := c.cache.Get(url); ok {
+		locationsResp := ResponseLocations{}
+		err := json.Unmarshal(val, &locationsResp)
+		if err != nil {
+			return ResponseLocations{}, err
+		}
 
-func FetchLocations(url string) []byte {
+		return locationsResp, nil
+	}
 
-	res, err := http.Get(baseURL)
-
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return ResponseLocations{}, err
 	}
 
-	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
-
-	if res.StatusCode > 299 {
-		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-	}
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return ResponseLocations{}, err
 	}
+	defer resp.Body.Close()
 
-	return body
-}
-
-func GetNextLocations(conf *locationConfig) {
-
-	var body []byte
-
-	if conf.Next == nil {
-		body = FetchLocations(baseURL)
-	} else {
-		body = FetchLocations(*conf.Next)
-	}
-
-	err := json.Unmarshal(body, &conf)
-
+	dat, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		return ResponseLocations{}, err
 	}
 
-	for i := 0; i < len(conf.Results); i++ {
-		fmt.Printf(conf.Results[i].Name + "\n")
-	}
-
-}
-
-func GetPrevLocations(conf *locationConfig) {
-
-	var body []byte
-
-	if conf.Previous == nil {
-		body = FetchLocations(baseURL)
-	} else {
-		body = FetchLocations(*conf.Previous)
-	}
-
-	err := json.Unmarshal(body, &conf)
-
+	locationsResp := ResponseLocations{}
+	err = json.Unmarshal(dat, &locationsResp)
 	if err != nil {
-		log.Fatal(err)
+		return ResponseLocations{}, err
 	}
 
-	for i := 0; i < len(conf.Results); i++ {
-		fmt.Printf(conf.Results[i].Name + "\n")
-	}
+	c.cache.Add(url, dat)
+	return locationsResp, nil
 }
