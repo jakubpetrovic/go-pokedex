@@ -20,6 +20,10 @@ type ResponseLocations struct {
 	} `json:"results"`
 }
 
+type ResponseLocationInfo struct {
+	//fix struct
+}
+
 func (c *Client) ListLocations(pageURL *string) (ResponseLocations, error) {
 	url := baseURL + "/location-area"
 	if pageURL != nil {
@@ -60,4 +64,35 @@ func (c *Client) ListLocations(pageURL *string) (ResponseLocations, error) {
 
 	c.cache.Add(url, dat)
 	return locationsResp, nil
+}
+
+func (c *Client) ExploreLocation(locationName string) (ResponseLocationInfo, error) {
+
+	url := baseURL + "/location/" + locationName
+
+	// if in cache pull from cache
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return ResponseLocationInfo{}, err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return ResponseLocationInfo{}, err
+	}
+	defer resp.Body.Close()
+
+	dat, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return ResponseLocationInfo{}, err
+	}
+
+	locInfoResp := ResponseLocationInfo{}
+	err = json.Unmarshal(dat, &locInfoResp)
+	if err != nil {
+		return ResponseLocationInfo{}, err
+	}
+
+	c.cache.Add(url, dat)
+	return locInfoResp, nil
 }

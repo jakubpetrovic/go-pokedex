@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func commandHelp(c *config) error {
+func commandHelp(c *config, str string) error {
 	fmt.Println()
 	for _, n := range commandLibrary() {
 		fmt.Printf("%s: %s\n", n.name, n.description)
@@ -14,12 +14,12 @@ func commandHelp(c *config) error {
 	return nil
 }
 
-func commandExit(c *config) error {
+func commandExit(c *config, str string) error {
 	os.Exit(0)
 	return nil
 }
 
-func commandMap(c *config) error {
+func commandMap(c *config, str string) error {
 	locationResp, err := c.pokeapiClient.ListLocations(c.nextLocationURL)
 
 	if err != nil {
@@ -35,7 +35,7 @@ func commandMap(c *config) error {
 	return nil
 }
 
-func commandMapb(c *config) error {
+func commandMapb(c *config, str string) error {
 	locationResp, err := c.pokeapiClient.ListLocations(c.previousLocationURL)
 
 	if err != nil {
@@ -47,6 +47,18 @@ func commandMapb(c *config) error {
 
 	for _, loc := range locationResp.Results {
 		fmt.Println(loc.Name)
+	}
+	return nil
+}
+
+func commandExplore(c *config, str string) error {
+	locationInfoResp, err := c.pokeapiClient.ExploreLocation(str)
+	if err != nil {
+		return err
+	}
+
+	for _, key := range locationInfoResp {
+		fmt.Println(key)
 	}
 	return nil
 }

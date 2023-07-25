@@ -18,7 +18,7 @@ type config struct {
 type cliCommands struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, string) error
 }
 
 func cleanInput(text string) []string {
@@ -40,11 +40,12 @@ func startRepl(config *config) {
 		}
 
 		commandName := words[0]
+		commandArgument := words[1]
 
 		command, exists := commandLibrary()[commandName]
 
 		if exists {
-			err := command.callback(config)
+			err := command.callback(config, commandArgument)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -77,6 +78,11 @@ func commandLibrary() map[string]cliCommands {
 			name:        "mapb",
 			description: "Displays previous 20 areas in the pokemon World",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore",
+			description: "displays pokemons in given area",
+			callback:    commandExplore,
 		},
 	}
 	return m
