@@ -62,3 +62,15 @@ func commandExplore(c *config, str string) error {
 	}
 	return nil
 }
+
+func commandCatch(c *config, str string) error {
+	pokemonResp, err := c.pokeapiClient.GetPokemon(str)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Pokemon caught: %v\n", pokemonResp.Name)
+
+	return nil
+}
