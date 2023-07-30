@@ -40,7 +40,12 @@ func startRepl(config *config) {
 		}
 
 		commandName := words[0]
-		commandArgument := words[1]
+		var commandArgument string
+		if len(words) != 1 {
+			commandArgument = words[1]
+		} else {
+			commandArgument = "noArgument"
+		}
 
 		command, exists := commandLibrary()[commandName]
 

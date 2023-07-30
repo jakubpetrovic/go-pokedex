@@ -57,7 +57,7 @@ func commandExplore(c *config, str string) error {
 		return err
 	}
 
-	for _, key := range locationInfoResp {
+	for _, key := range locationInfoResp.PokemonEncounters {
 		fmt.Println(key)
 	}
 	return nil
