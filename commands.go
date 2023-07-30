@@ -58,7 +58,7 @@ func commandExplore(c *config, str string) error {
 	}
 
 	for _, key := range locationInfoResp.PokemonEncounters {
-		fmt.Println(key)
+		fmt.Printf(" - %s\n", key.Pokemon.Name)
 	}
 	return nil
 }

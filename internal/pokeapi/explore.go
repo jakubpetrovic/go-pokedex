@@ -2,6 +2,7 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -61,7 +62,7 @@ type locationAreaResp struct {
 
 func (c *Client) ExploreLocation(locationName string) (locationAreaResp, error) {
 
-	url := baseURL + "/location/" + locationName
+	url := baseURL + "/location-area/" + locationName
 
 	// if in cache pull from cache
 	if val, ok := c.cache.Get(url); ok {
@@ -91,6 +92,7 @@ func (c *Client) ExploreLocation(locationName string) (locationAreaResp, error) 
 	locInfoResp := locationAreaResp{}
 	err = json.Unmarshal(dat, &locInfoResp)
 	if err != nil {
+		fmt.Println("Location not found.")
 		return locationAreaResp{}, err
 	}
 
