@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math"
+	"math/rand"
 	"os"
 )
 
@@ -70,7 +72,20 @@ func commandCatch(c *config, str string) error {
 		return err
 	}
 
-	fmt.Printf("Pokemon caught: %v\n", pokemonResp.Name)
+	baseCatcgRate := 0.3
+	scalingFactor := 0.001
+	catchRate := baseCatcgRate - scalingFactor*float64(pokemonResp.BaseExperience)
+	catchProbability := math.Max(0, math.Min(1, catchRate))
 
+	fmt.Printf("Pokemon base experience: %v\n", pokemonResp.BaseExperience)
+	fmt.Printf("Pokemon catch chance: %v\n", catchProbability)
+	catchAttempt := rand.Float64()
+	fmt.Printf("Catch attempt roll: %v\n", catchAttempt)
+
+	if catchAttempt > catchProbability {
+		fmt.Printf("\n !%s escaped! \n\n", pokemonResp.Name)
+	} else {
+		fmt.Printf("\n %s was caught! \n\n", pokemonResp.Name)
+	}
 	return nil
 }
