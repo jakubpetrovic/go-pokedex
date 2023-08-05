@@ -107,16 +107,31 @@ func commandInspect(c *config, str string) error {
 		return nil
 	}
 
-	fmt.Printf("Name: %v\n", pokemon.Name)
+	fmt.Printf("Name: %s\n", pokemon.Name)
 	fmt.Printf("Height: %v\n", pokemon.Height)
 	fmt.Printf("Weight: %v\n", pokemon.Weight)
-	fmt.Printf("Stats:\n")
+	fmt.Println("Stats:")
 	for _, s := range pokemon.Stats {
-		fmt.Printf(" -%v: %v\n", s.Stat.Name, s.BaseStat)
+		fmt.Printf(" -%s: %v\n", s.Stat.Name, s.BaseStat)
 	}
-	fmt.Printf("Types:\n")
+	fmt.Println("Types:")
 	for _, t := range pokemon.Types {
-		fmt.Printf(" - %v\n", t.Type.Name)
+		fmt.Printf(" - %s\n", t.Type.Name)
+	}
+
+	return nil
+}
+
+func commandPokedex(c *config, str string) error {
+
+	if c.caughtPokemons == nil {
+		fmt.Println("You did not catch any pokemons yet!")
+		return nil
+	}
+
+	fmt.Println("Your pokedex:")
+	for _, p := range c.caughtPokemons {
+		fmt.Printf(" - %s\n", p.Name)
 	}
 
 	return nil
