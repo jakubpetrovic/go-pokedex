@@ -103,7 +103,7 @@ func commandInspect(c *config, str string) error {
 	pokemon, ok := c.caughtPokemons[str]
 
 	if !ok {
-		fmt.Printf("Pokemon %v, you need to catch the pokemon first!", str)
+		fmt.Printf("Pokemon %v, you need to catch the pokemon first!\n", str)
 		return nil
 	}
 
@@ -111,8 +111,13 @@ func commandInspect(c *config, str string) error {
 	fmt.Printf("Height: %v\n", pokemon.Height)
 	fmt.Printf("Weight: %v\n", pokemon.Weight)
 	fmt.Printf("Stats:\n")
-	fmt.Printf(" -hp: %v\n", pokemon.Stats)
-	fmt.Printf("Types: %v\n", pokemon.Types)
+	for _, s := range pokemon.Stats {
+		fmt.Printf(" -%v: %v\n", s.Stat.Name, s.BaseStat)
+	}
+	fmt.Printf("Types:\n")
+	for _, t := range pokemon.Types {
+		fmt.Printf(" - %v\n", t.Type.Name)
+	}
 
 	return nil
 }
