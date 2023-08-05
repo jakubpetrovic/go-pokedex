@@ -4,6 +4,12 @@
 
 Simple CLI go pokedex made for boot.dev "build a pokedex" guided project.
 
+## How to use
+
+- clone the git repository
+- run `go run .` inside the repository
+- run `help` in the pokedex to list all available commands
+
 ## Parts
 
 - [x] REPL
