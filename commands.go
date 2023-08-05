@@ -68,6 +68,14 @@ func commandExplore(c *config, str string) error {
 }
 
 func commandCatch(c *config, str string) error {
+
+	_, caught := c.caughtPokemons[str]
+
+	if caught {
+		fmt.Println("You already own this pokemon!")
+		return nil
+	}
+
 	pokemonResp, err := c.pokeapiClient.GetPokemon(str)
 
 	if err != nil {
