@@ -5,6 +5,8 @@ import (
 	"math"
 	"math/rand"
 	"os"
+
+	"github.com/jpetrovic/go-pokedex/internal/pokeapi"
 )
 
 func commandHelp(c *config, str string) error {
@@ -72,6 +74,10 @@ func commandCatch(c *config, str string) error {
 		return err
 	}
 
+	if c.caughtPokemons == nil {
+		c.caughtPokemons = make(map[string]pokeapi.Pokemon)
+	}
+
 	baseCatcgRate := 0.3
 	scalingFactor := 0.001
 	catchRate := baseCatcgRate - scalingFactor*float64(pokemonResp.BaseExperience)
@@ -88,6 +94,25 @@ func commandCatch(c *config, str string) error {
 		c.caughtPokemons[pokemonResp.Name] = pokemonResp
 		fmt.Printf("\n %s was caught! \n\n", pokemonResp.Name)
 	}
+
+	return nil
+}
+
+func commandInspect(c *config, str string) error {
+
+	pokemon, ok := c.caughtPokemons[str]
+
+	if !ok {
+		fmt.Printf("Pokemon %v, you need to catch the pokemon first!", str)
+		return nil
+	}
+
+	fmt.Printf("Name: %v\n", pokemon.Name)
+	fmt.Printf("Height: %v\n", pokemon.Height)
+	fmt.Printf("Weight: %v\n", pokemon.Weight)
+	fmt.Printf("Stats:\n")
+	fmt.Printf(" -hp: %v\n", pokemon.Stats)
+	fmt.Printf("Types: %v\n", pokemon.Types)
 
 	return nil
 }
