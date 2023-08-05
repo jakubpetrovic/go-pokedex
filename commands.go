@@ -85,7 +85,9 @@ func commandCatch(c *config, str string) error {
 	if catchAttempt > catchProbability {
 		fmt.Printf("\n !%s escaped! \n\n", pokemonResp.Name)
 	} else {
+		c.caughtPokemons[pokemonResp.Name] = pokemonResp
 		fmt.Printf("\n %s was caught! \n\n", pokemonResp.Name)
 	}
+
 	return nil
 }

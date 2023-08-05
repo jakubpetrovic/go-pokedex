@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type pokemonResp struct {
+type Pokemon struct {
 	Abilities []struct {
 		Ability struct {
 			Name string `json:"name"`
@@ -263,40 +263,40 @@ type pokemonResp struct {
 	Weight int `json:"weight"`
 }
 
-func (c *Client) GetPokemon(pokemonName string) (pokemonResp, error) {
+func (c *Client) GetPokemon(pokemonName string) (Pokemon, error) {
 
 	url := baseURL + "/pokemon/" + pokemonName
 
 	// if in cache pull from cache
 	if val, ok := c.cache.Get(url); ok {
-		response := pokemonResp{}
+		response := Pokemon{}
 		err := json.Unmarshal(val, &response)
 		if err != nil {
-			return pokemonResp{}, err
+			return Pokemon{}, err
 		}
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return pokemonResp{}, err
+		return Pokemon{}, err
 	}
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return pokemonResp{}, err
+		return Pokemon{}, err
 	}
 	defer resp.Body.Close()
 
 	dat, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return pokemonResp{}, err
+		return Pokemon{}, err
 	}
 
-	pokemonData := pokemonResp{}
+	pokemonData := Pokemon{}
 	err = json.Unmarshal(dat, &pokemonData)
 	if err != nil {
 		fmt.Println("Location not found.")
-		return pokemonResp{}, err
+		return Pokemon{}, err
 	}
 
 	c.cache.Add(url, dat)
