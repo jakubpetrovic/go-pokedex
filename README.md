@@ -6,13 +6,13 @@ Simple CLI go pokedex made for boot.dev "build a pokedex" guided project.
 
 ## Parts
 
-- REPL [x]
-- PokeAPI [x]
-- Caching [x]
-- Explore [x]
-- Catch []
-- Inspect []
-- Pokedex []
+- [x] REPL
+- [x] PokeAPI
+- [x] Caching
+- [x] Explore
+- [] Catch
+- [] Inspect
+- [] Pokedex
 
 ## Summary
 
