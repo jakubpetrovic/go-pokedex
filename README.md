@@ -15,6 +15,7 @@ Simple CLI go pokedex made for boot.dev "build a pokedex" guided project.
 - [ ] Pokedex
 
 ## TODO
+
 - [ ] add testing
 - [ ] If pokeman is already caught, dont try to catch again.
 - [ ] add pokemon list function
