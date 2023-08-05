@@ -10,7 +10,7 @@ Simple CLI go pokedex made for boot.dev "build a pokedex" guided project.
 - [x] PokeAPI
 - [x] Caching
 - [x] Explore
-- [ ] Catch
+- [x] Catch
 - [ ] Inspect
 - [ ] Pokedex
 
